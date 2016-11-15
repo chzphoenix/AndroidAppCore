@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="20dp"
+    android:minWidth="280dp"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/normal_dialog_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:singleLine="true"
+        android:text="这里是标题"
+        android:textSize="18dp" />
+
+    <FrameLayout
+        android:id="@+id/normal_dialog_title_divide"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"/>
+
+    <FrameLayout
+        android:id="@+id/normal_dialog_content"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp">
+    <TextView
+        android:id="@+id/normal_dialog_message"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="这里是内容"
+        android:textSize="16dp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/normal_dialog_button_divide"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/normal_dialog_positive_layout"
+            android:layout_width="0dip"
+            android:layout_height="40dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/normal_dialog_positive_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:paddingBottom="5dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:paddingTop="5dp"
+                android:singleLine="true"
+                android:text="确定" />
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/normal_dialog_button_divide_vertical"
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"/>
+
+        <TextView
+            android:id="@+id/normal_dialog_negative_btn"
+            android:layout_width="0dip"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:text="取消" />
+    </LinearLayout>
+
+</LinearLayout>
