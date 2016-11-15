@@ -103,7 +103,7 @@ public class NetUtils {
     public static final int NETWORK_TYPE_EHRPD = 14;
     /** Current network is HSPA+ */
     public static final int NETWORK_TYPE_HSPAP = 15;
-    /** Current network is GSM {@hide} */
+    /** Current network is GSM */
     public static final int NETWORK_TYPE_GSM = 16;
 
     /**
@@ -162,10 +162,9 @@ public class NetUtils {
 	}
 
 	/**
-	 *@Title: detect
-	 *@Description: TODO 判断用户是否联网
-	 *@param act
-	 *@return
+	 * 判断用户是否联网
+	 * @param act
+	 * @return
 	 */
 	public static boolean isNetworkAvailable(Context act) {
 		ConnectivityManager manager = (ConnectivityManager) act

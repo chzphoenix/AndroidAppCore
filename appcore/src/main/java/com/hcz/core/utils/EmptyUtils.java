@@ -8,12 +8,7 @@ import org.json.JSONArray;
 
 /**
  * 校验是否为空工具类
- * 
- * @author <a href="http://www.iamuv.com" target="_blank">Uv</a> <br>
- *         <a href="mailto:uv@iamuv.com?subject=about EmptyUtils.java">uv@iamuv.
- *         com</a> <br>
- *         2014-6-5
- * 
+ *
  */
 public class EmptyUtils {
 
