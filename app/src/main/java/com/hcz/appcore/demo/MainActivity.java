@@ -3,6 +3,8 @@ package com.hcz.appcore.demo;
 import android.app.Activity;
 import android.os.Bundle;
 
+import com.hcz.core.utils.ToastUtils;
+
 public class MainActivity extends Activity {
 
     @Override

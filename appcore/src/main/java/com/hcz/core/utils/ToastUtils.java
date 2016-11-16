@@ -15,9 +15,7 @@ public class ToastUtils {
         if (mToast != null) {
             mToast.cancel();
         }
-        mToast = new Toast(context);
-        mToast.setText(msg);
-        mToast.setDuration(duration);
+        mToast = Toast.makeText(context, msg, duration);
         mToast.show();
         return mToast;
     }
