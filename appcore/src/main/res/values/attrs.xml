@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DashedView">
+        <attr name="dashWidth" format="dimension" />
+        <attr name="dashGap" format="dimension" />
+        <attr name="dashColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="BannerView">
+        <attr name="bannerTitlePaddingLeft" format="dimension" />
+        <attr name="bannerTitlePaddingRight" format="dimension" />
+        <attr name="bannerTitlePaddingTop" format="dimension" />
+        <attr name="bannerTitlePaddingBottom" format="dimension" />
+        <attr name="bannerTitleColor" format="color" />
+        <attr name="bannerTitleSize" format="dimension" />
+        <attr name="bannerTitleBackgroundColor" format="color" />
+        <attr name="bannerTitleGravity" format="integer" />
+        <attr name="bannerIndicatorDrawable" format="reference"/>
+        <attr name="bannerIndicatorMarginBottom" format="dimension"/>
+        <attr name="bannerIndicatorMarginRight" format="dimension"/>
+        <attr name="bannerIndicatorMarginLeft" format="dimension"/>
+        <attr name="bannerIndicatorSpace" format="dimension"/>
+        <attr name="bannerIndicatorWidth" format="dimension"/>
+        <attr name="bannerIndicatorHeight" format="dimension"/>
+        <attr name="bannerIndicatorAlignParentRule" format="integer" />
+    </declare-styleable>
+</resources>
