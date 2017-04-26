@@ -22,21 +22,21 @@ public class SimplifiedChineseSorter {
     private static final String SORTINGREGEX = "[^\\p{L}\\p{N}]+|^(The|A|An)\\b";
     private static final Collator stringComparator = Collator.getInstance(Locale.SIMPLIFIED_CHINESE);
 
-    public static <T> List<T> sortByFieldName(List<T> items, String fieldName) {
+    public static <T> List<T> sortByFieldName(List<T> items, String fieldName, boolean isIgnoreCase) {
         if (items == null || items.size() <= 0) {
             return null;
         }
-        return sortByField(items, getSortStringField(items.get(0).getClass(), fieldName));
+        return sortByField(items, getSortStringField(items.get(0).getClass(), fieldName), isIgnoreCase);
     }
 
-    public static <T> List<T> sortByFieldAnnotation(List<T> items) {
+    public static <T> List<T> sortByFieldAnnotation(List<T> items, boolean isIgnoreCase) {
         if (items == null || items.size() <= 0) {
             return null;
         }
-        return sortByField(items, getSortStringField(items.get(0).getClass()));
+        return sortByField(items, getSortStringField(items.get(0).getClass()), isIgnoreCase);
     }
 
-    private static <T> List<T> sortByField(List<T> items, final Field sortField) {
+    private static <T> List<T> sortByField(List<T> items, final Field sortField, final boolean isIgnoreCase) {
         sortField.setAccessible(true);
         final List<T> chinieseList = new ArrayList<T>();
         final List<T> nonChineseList = new ArrayList<T>();
@@ -52,13 +52,12 @@ public class SimplifiedChineseSorter {
                 return null;
             }
         }
-        final Pattern pattern = Pattern.compile(SORTINGREGEX, Pattern.CASE_INSENSITIVE);
         List<T> sortedChineseList = Ordering.from(new Comparator<T>() {
             @Override
             public int compare(T lhs, T rhs) {
                 try {
-                    return stringComparator.compare(toLowerCase(pattern.matcher((String) sortField.get(lhs)).replaceAll("")),
-                            toLowerCase(pattern.matcher((String) sortField.get(rhs)).replaceAll("")));
+                    return stringComparator.compare(format((String) sortField.get(lhs), isIgnoreCase),
+                            format((String) sortField.get(rhs), isIgnoreCase));
                 } catch (IllegalAccessException e) {
                     Log.e("SimplifiedChineseSorter", "sortedChineseList", e);
                     return 0;
@@ -69,8 +68,8 @@ public class SimplifiedChineseSorter {
             @Override
             public int compare(T lhs, T rhs) {
                 try {
-                    return toLowerCase(pattern.matcher((String) sortField.get(lhs)).replaceAll(""))
-                                  .compareTo(toLowerCase(pattern.matcher((String) sortField.get(rhs)).replaceAll("")));
+                    return format((String) sortField.get(lhs), isIgnoreCase)
+                                  .compareTo(format((String) sortField.get(rhs), isIgnoreCase));
                 } catch (IllegalAccessException e) {
                     Log.e("SimplifiedChineseSorter", "sortedNonChineseList", e);
                     return 0;
@@ -81,33 +80,30 @@ public class SimplifiedChineseSorter {
         return sortedChineseList;
     }
 
-    public static <T> Comparator<T> getSortComparatorByFieldName(final Class clazz, final String fieldName) {
-        return getSortComparator(getSortStringField(clazz, fieldName));
+    public static <T> Comparator<T> getSortComparatorByFieldName(final Class clazz, final String fieldName, boolean isIgnoreCase) {
+        return getSortComparator(getSortStringField(clazz, fieldName), isIgnoreCase);
     }
 
-    public static <T> Comparator<T> getSortComparatorByFieldAnnotation(final Class clazz) {
-        return getSortComparator(getSortStringField(clazz));
+    public static <T> Comparator<T> getSortComparatorByFieldAnnotation(final Class clazz, boolean isIgnoreCase) {
+        return getSortComparator(getSortStringField(clazz), isIgnoreCase);
     }
 
-    private static <T> Comparator<T> getSortComparator(final Field sortField) {
+    private static <T> Comparator<T> getSortComparator(final Field sortField, final boolean isIgnoreCase) {
         sortField.setAccessible(true);
         return new Comparator<T>() {
             @Override
             public int compare(final T left, final T right) {
                 try {
-                    String leftStr = (String) sortField.get(left);
-                    String rightStr = (String) sortField.get(right);
+                    String leftStr = format((String) sortField.get(left), isIgnoreCase);
+                    String rightStr = format((String) sortField.get(right), isIgnoreCase);
                     if (SimplifiedChineseSorter.isChineseCharStart(leftStr) &&
                             SimplifiedChineseSorter.isChineseCharStart(rightStr)) {
-                        return stringComparator.compare(toLowerCase(leftStr),
-                                toLowerCase(rightStr));
+                        return stringComparator.compare(leftStr, rightStr);
                     } else {
                         return ComparisonChain.start()
                                               .compareTrueFirst(SimplifiedChineseSorter.isChineseCharStart(leftStr),
                                                       SimplifiedChineseSorter.isChineseCharStart(rightStr))
-                                              .compare(toLowerCase(leftStr),
-                                                      toLowerCase(rightStr),
-                                                      Ordering.natural().nullsFirst())
+                                              .compare(leftStr, rightStr, Ordering.natural().nullsFirst())
                                               .result();
                     }
                 } catch (IllegalAccessException e) {
@@ -147,7 +143,16 @@ public class SimplifiedChineseSorter {
         }
     }
 
-    private static String toLowerCase(String data) {
-        return data != null ? data.trim().toLowerCase() : "";
+    private static String format(String data, boolean isIgnoreCase) {
+        Pattern pattern = Pattern.compile(SORTINGREGEX, Pattern.CASE_INSENSITIVE);
+        if(data == null){
+            return "";
+        }
+        else if(isIgnoreCase){
+            return pattern.matcher(data.trim()).replaceAll("").toLowerCase();
+        }
+        else{
+            return pattern.matcher(data.trim()).replaceAll("");
+        }
     }
 }
