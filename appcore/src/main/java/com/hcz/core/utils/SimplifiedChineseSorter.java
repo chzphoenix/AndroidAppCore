@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 
 /**
  * Simplified Chinese item sorter
- *
+ * now has a bug: "沈" is between "沉" and "陈". I guess it is a bug in Collator which changed by android.A simple solution is replacing "沈" to "神".
  * Created by hcui on 4/7/17.
  */
 public class SimplifiedChineseSorter {
