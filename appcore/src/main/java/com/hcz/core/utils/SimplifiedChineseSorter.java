@@ -23,11 +23,11 @@ public class SimplifiedChineseSorter {
     private static final String SORTINGREGEX = "[^\\p{L}\\p{N}]+|^(The|A|An)\\b";
     private static final Collator stringComparator = Collator.getInstance(Locale.SIMPLIFIED_CHINESE);
 
-    public static <T> List<T> sortByProvider(List<T> items, SortStringProvider<T> provider) {
+    public static <T> List<T> sortByProvider(List<T> items, SortStringProvider<T> provider, boolean isIgnoreCase) {
         if (items == null || items.size() <= 0) {
             return null;
         }
-        return sortList(items, provider);
+        return sortList(items, provider, isIgnoreCase);
     }
 
     public static <T> List<T> sortByFieldName(List<T> items, String fieldName, boolean isIgnoreCase) {
@@ -35,8 +35,8 @@ public class SimplifiedChineseSorter {
             return null;
         }
         Field field = getSortStringField(items.get(0).getClass(), fieldName);
-        DefualtSortStringProvider<T> provider = new DefualtSortStringProvider<T>(field, isIgnoreCase);
-        return sortList(items, provider);
+        DefualtSortStringProvider<T> provider = new DefualtSortStringProvider<T>(field);
+        return sortList(items, provider, isIgnoreCase);
     }
 
     public static <T> List<T> sortByFieldAnnotation(List<T> items, boolean isIgnoreCase) {
@@ -44,8 +44,8 @@ public class SimplifiedChineseSorter {
             return null;
         }
         Field field = getSortStringField(items.get(0).getClass());
-        DefualtSortStringProvider<T> provider = new DefualtSortStringProvider<T>(field, isIgnoreCase);
-        return sortList(items, provider);
+        DefualtSortStringProvider<T> provider = new DefualtSortStringProvider<T>(field);
+        return sortList(items, provider, isIgnoreCase);
     }
 
     public static <T> List<T> sortByMethodName(List<T> items, String methodName, boolean isIgnoreCase) {
@@ -53,8 +53,8 @@ public class SimplifiedChineseSorter {
             return null;
         }
         Method method = getSortStringMethod(items.get(0).getClass(), methodName);
-        DefualtSortStringProvider<T> provider = new DefualtSortStringProvider<T>(method, isIgnoreCase);
-        return sortList(items, provider);
+        DefualtSortStringProvider<T> provider = new DefualtSortStringProvider<T>(method);
+        return sortList(items, provider, isIgnoreCase);
     }
 
     public static <T> List<T> sortByMethodAnnotation(List<T> items, boolean isIgnoreCase) {
@@ -62,18 +62,18 @@ public class SimplifiedChineseSorter {
             return null;
         }
         Method method = getSortStringMethod(items.get(0).getClass());
-        DefualtSortStringProvider<T> provider = new DefualtSortStringProvider<T>(method, isIgnoreCase);
-        return sortList(items, provider);
+        DefualtSortStringProvider<T> provider = new DefualtSortStringProvider<T>(method);
+        return sortList(items, provider, isIgnoreCase);
     }
 
-    private static <T> List<T> sortList(List<T> items, final SortStringProvider<T> provider) {
+    private static <T> List<T> sortList(List<T> items, final SortStringProvider<T> provider, final boolean isIgnoreCase) {
         if(provider == null){
             return items;
         }
         final List<T> chinieseList = new ArrayList<T>();
         final List<T> nonChineseList = new ArrayList<T>();
         for (T item : items) {
-            if (isChineseCharStart(provider.getSortString(item))) {
+            if (isChineseCharStart(format(provider.getSortString(item), isIgnoreCase))) {
                 chinieseList.add(item);
             } else {
                 nonChineseList.add(item);
@@ -82,53 +82,53 @@ public class SimplifiedChineseSorter {
         List<T> sortedChineseList = Ordering.from(new Comparator<T>() {
             @Override
             public int compare(T lhs, T rhs) {
-                return stringComparator.compare(provider.getSortString(lhs), provider.getSortString(rhs));
+                return stringComparator.compare(format(provider.getSortString(lhs), isIgnoreCase), format(provider.getSortString(rhs), isIgnoreCase));
             }
         }).sortedCopy(chinieseList);
         List<T> sortedNonChineseList = Ordering.from(new Comparator<T>() {
             @Override
             public int compare(T lhs, T rhs) {
-                return provider.getSortString(lhs).compareTo(provider.getSortString(rhs));
+                return format(provider.getSortString(lhs), isIgnoreCase).compareTo(format(provider.getSortString(rhs), isIgnoreCase));
             }
         }).sortedCopy(nonChineseList);
         sortedChineseList.addAll(sortedNonChineseList);
         return sortedChineseList;
     }
 
-    public static <T> Comparator<T> getSortComparatorByProvider(final Class clazz, SortStringProvider<T> provider) {
-        return getSortComparator(provider);
+    public static <T> Comparator<T> getSortComparatorByProvider(final Class clazz, SortStringProvider<T> provider, boolean isIgnoreCase) {
+        return getSortComparator(provider, isIgnoreCase);
     }
 
     public static <T> Comparator<T> getSortComparatorByFieldName(final Class clazz, final String fieldName, boolean isIgnoreCase) {
         Field field = getSortStringField(clazz, fieldName);
-        DefualtSortStringProvider<T> provider = new DefualtSortStringProvider<T>(field, isIgnoreCase);
-        return getSortComparator(provider);
+        DefualtSortStringProvider<T> provider = new DefualtSortStringProvider<T>(field);
+        return getSortComparator(provider, isIgnoreCase);
     }
 
     public static <T> Comparator<T> getSortComparatorByFieldAnnotation(final Class clazz, boolean isIgnoreCase) {
         Field field = getSortStringField(clazz);
-        DefualtSortStringProvider<T> provider = new DefualtSortStringProvider<T>(field, isIgnoreCase);
-        return getSortComparator(provider);
+        DefualtSortStringProvider<T> provider = new DefualtSortStringProvider<T>(field);
+        return getSortComparator(provider, isIgnoreCase);
     }
 
     public static <T> Comparator<T> getSortComparatorByMethodName(final Class clazz, final String methodName, boolean isIgnoreCase) {
         Method method = getSortStringMethod(clazz, methodName);
-        DefualtSortStringProvider<T> provider = new DefualtSortStringProvider<T>(method, isIgnoreCase);
-        return getSortComparator(provider);
+        DefualtSortStringProvider<T> provider = new DefualtSortStringProvider<T>(method);
+        return getSortComparator(provider, isIgnoreCase);
     }
 
     public static <T> Comparator<T> getSortComparatorByMethodAnnotation(final Class clazz, boolean isIgnoreCase) {
         Method method = getSortStringMethod(clazz);
-        DefualtSortStringProvider<T> provider = new DefualtSortStringProvider<T>(method, isIgnoreCase);
-        return getSortComparator(provider);
+        DefualtSortStringProvider<T> provider = new DefualtSortStringProvider<T>(method);
+        return getSortComparator(provider, isIgnoreCase);
     }
 
-    private static <T> Comparator<T> getSortComparator(final SortStringProvider<T> provider) {
+    private static <T> Comparator<T> getSortComparator(final SortStringProvider<T> provider, final boolean isIgnoreCase) {
         return new Comparator<T>() {
             @Override
             public int compare(final T left, final T right) {
-                String leftStr = provider.getSortString(left);
-                String rightStr = provider.getSortString(right);
+                String leftStr = format(provider.getSortString(left), isIgnoreCase);
+                String rightStr = format(provider.getSortString(right), isIgnoreCase);
                 if (SimplifiedChineseSorter.isChineseCharStart(leftStr) &&
                         SimplifiedChineseSorter.isChineseCharStart(rightStr)) {
                     return stringComparator.compare(leftStr, rightStr);
@@ -217,19 +217,17 @@ public class SimplifiedChineseSorter {
 
     static class DefualtSortStringProvider<T> implements SortStringProvider<T>{
         private Object orderBy;
-        private boolean isIgnoreCase;
 
-        DefualtSortStringProvider(Object orderBy, boolean isIgnoreCase){
+        DefualtSortStringProvider(Object orderBy){
             this.orderBy = orderBy;
-            this.isIgnoreCase = isIgnoreCase;
         }
 
         public String getSortString(T obj){
             try {
                 if (orderBy instanceof Field) {
-                    return format((String) ((Field) orderBy).get(obj), isIgnoreCase);
+                    return (String) ((Field) orderBy).get(obj);
                 } else if (orderBy instanceof Method) {
-                    return format((String) ((Method)orderBy).invoke(obj), isIgnoreCase);
+                    return (String) ((Method)orderBy).invoke(obj);
                 }
             }
             catch (Exception e){
@@ -239,7 +237,7 @@ public class SimplifiedChineseSorter {
         }
     }
 
-    interface SortStringProvider<T>{
+    public interface SortStringProvider<T>{
         String getSortString(T obj);
     }
 }
