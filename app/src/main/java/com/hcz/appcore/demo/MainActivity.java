@@ -33,11 +33,17 @@ public class MainActivity extends Activity {
         list.add(new SortModel(6, " 刘风"));
         list.add(new SortModel(7, "就接"));
         list.add(new SortModel(8, "Si"));
+//
+//        List<SortModel> sortlist = SimplifiedChineseSorter.sortByFieldName(list, "name", true);
+//        List<SortModel> sortlist1 = SimplifiedChineseSorter.sortByFieldName(list, "name", false);
+//        List<SortModel> sortlist2 = Ordering.from(SimplifiedChineseSorter.getSortComparatorByFieldAnnotation(SortModel.class, true)).sortedCopy(list);
+//        List<SortModel> sortlist3 = Ordering.from(SimplifiedChineseSorter.getSortComparatorByFieldAnnotation(SortModel.class, false)).sortedCopy(list);
 
-        List<SortModel> sortlist = SimplifiedChineseSorter.sortByFieldName(list, "name", true);
-        List<SortModel> sortlist1 = SimplifiedChineseSorter.sortByFieldName(list, "name", false);
-        List<SortModel> sortlist2 = Ordering.from(SimplifiedChineseSorter.getSortComparatorByFieldAnnotation(SortModel.class, true)).sortedCopy(list);
-        List<SortModel> sortlist3 = Ordering.from(SimplifiedChineseSorter.getSortComparatorByFieldAnnotation(SortModel.class, false)).sortedCopy(list);
+        List<SortModel> sortlist = SimplifiedChineseSorter.sortByMethodName(list, "getName", true);
+        List<SortModel> sortlist1 = SimplifiedChineseSorter.sortByMethodName(list, "getName", false);
+        List<SortModel> sortlist2 = Ordering.from(SimplifiedChineseSorter.getSortComparatorByMethodAnnotation(SortModel.class, true)).sortedCopy
+                (list);
+        List<SortModel> sortlist3 = Ordering.from(SimplifiedChineseSorter.getSortComparatorByMethodAnnotation(SortModel.class, false)).sortedCopy(list);
 
         for (SortModel model : sortlist) {
             Log.e("sort list", model.toString());

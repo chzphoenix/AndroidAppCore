@@ -25,6 +25,7 @@ public class SortModel {
         this.id = id;
     }
 
+    @SortString
     public String getName() {
         return name;
     }
