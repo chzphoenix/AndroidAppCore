@@ -7,8 +7,10 @@ import android.util.Log;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 import com.hcz.core.utils.SimplifiedChineseSorter;
+import com.hcz.core.utils.SortString;
 import com.hcz.core.utils.ToastUtils;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;

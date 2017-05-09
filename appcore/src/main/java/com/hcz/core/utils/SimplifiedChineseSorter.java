@@ -157,19 +157,28 @@ public class SimplifiedChineseSorter {
                 }
             }
         }
+        Class superClass = tClass.getSuperclass();
+        if(superClass != null && !superClass.equals(Object.class)){
+            return getSortStringField(superClass);
+        }
         throw new RuntimeException("The model doesn't have a @SortString field or the type of @SortString field is not a String");
     }
 
-    private static <T> Field getSortStringField(Class<T> tClass, String sortFieldName) {
+    public static <T> Field getSortStringField(Class<T> tClass, String sortFieldName) {
+        Field field = null;
         try {
-            Field field = tClass.getDeclaredField(sortFieldName);
+            field = tClass.getDeclaredField(sortFieldName);
+        } catch (NoSuchFieldException e) {
+        }
+        finally {
             if (field != null && field.getType() == String.class) {
                 field.setAccessible(true);
                 return field;
             }
-            throw new RuntimeException("The model doesn't have a field named " + sortFieldName);
-        } catch (NoSuchFieldException e) {
-            Log.e("SimplifiedChineseSorter", "getSortStringField", e);
+            Class superClass = tClass.getSuperclass();
+            if(superClass != null && !superClass.equals(Object.class)){
+                return getSortStringField(superClass, sortFieldName);
+            }
             throw new RuntimeException("The model doesn't have a field named " + sortFieldName);
         }
     }
@@ -184,19 +193,28 @@ public class SimplifiedChineseSorter {
                 }
             }
         }
+        Class superClass = tClass.getSuperclass();
+        if(superClass != null && !superClass.equals(Object.class)){
+            return getSortStringMethod(superClass);
+        }
         throw new RuntimeException("The model doesn't have a @SortString method or the returnning type of @SortString method is not a String");
     }
 
     private static <T> Method getSortStringMethod(Class<T> tClass, String sortMethodName) {
+        Method method = null;
         try {
-            Method method = tClass.getDeclaredMethod(sortMethodName);
+            method = tClass.getDeclaredMethod(sortMethodName);
+        } catch (NoSuchMethodException e) {
+        }
+        finally {
             if (method != null && method.getReturnType() == String.class) {
                 method.setAccessible(true);
                 return method;
             }
-            throw new RuntimeException("The model doesn't have a method named " + sortMethodName);
-        } catch (NoSuchMethodException e) {
-            Log.e("SimplifiedChineseSorter", "getSortStringMethod", e);
+            Class superClass = tClass.getSuperclass();
+            if(superClass != null && !superClass.equals(Object.class)){
+                return getSortStringMethod(superClass, sortMethodName);
+            }
             throw new RuntimeException("The model doesn't have a method named " + sortMethodName);
         }
     }
