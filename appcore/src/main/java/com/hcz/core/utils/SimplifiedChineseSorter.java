@@ -164,7 +164,7 @@ public class SimplifiedChineseSorter {
         throw new RuntimeException("The model doesn't have a @SortString field or the type of @SortString field is not a String");
     }
 
-    public static <T> Field getSortStringField(Class<T> tClass, String sortFieldName) {
+    private static <T> Field getSortStringField(Class<T> tClass, String sortFieldName) {
         Field field = null;
         try {
             field = tClass.getDeclaredField(sortFieldName);
